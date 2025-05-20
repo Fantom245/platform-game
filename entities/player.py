@@ -49,7 +49,17 @@ class Player:
             self.dash_time = now
             self.last_dash = now
 
-    def update(self, platforms):
+    def check_attack_hit(self, enemies):
+        if self.attack_frame == 1:  # Бьём только на 2-м кадре (по желанию)
+            attack_rect = self.rect.copy()
+            attack_rect.width += 20
+            attack_rect.x += 10  # Можно варьировать дальность
+
+            for enemy in enemies:
+                if enemy.alive and attack_rect.colliderect(enemy.rect):
+                    enemy.take_damage()
+
+    def update(self, platforms, enemies):
         self.handle_attack()
         self.handle_dash()
 
@@ -63,6 +73,8 @@ class Player:
                 if self.attack_frame >= len(self.images_attack):
                     self.is_attacking = False
                     self.attack_frame = 0
+                else:
+                    self.check_attack_hit(enemies)  # 💥 Проверка попадания
 
         keys = pygame.key.get_pressed()
         dx = 0
