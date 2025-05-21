@@ -13,6 +13,8 @@ class Game:
         self.player.update(self.platforms, self.enemies)  # 💥 Передаём врагов
         for enemy in self.enemies:
             enemy.update()
+            if self.player.rect.colliderect(enemy.rect) and enemy.alive:
+                self.restart_game()
 
     def draw(self):
         self.screen.fill((135, 206, 235))
@@ -21,3 +23,7 @@ class Game:
         for enemy in self.enemies:
             enemy.draw(self.screen)  # 💥 Отрисовка врагов
         self.player.draw(self.screen)
+
+    def restart_game(self):
+        print("💥 Столкновение с врагом! Перезапуск...")
+        self.__init__(self.screen)
