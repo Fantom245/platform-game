@@ -33,6 +33,7 @@ class Player:
         self.dash_speed = 20
         self.dash_cooldown = 1000  # мс
         self.last_dash = -self.dash_cooldown
+        self.facing_right = True
 
     def handle_attack(self):
         keys = pygame.key.get_pressed()
@@ -127,9 +128,19 @@ class Player:
         self.rect.x += dx
         self.rect.y += dy
 
+        if dx > 0:
+            self.facing_right = True
+        elif dx < 0:
+            self.facing_right = False
+
     def draw(self, surface):
         if self.is_attacking:
             self.image = self.images_attack[self.attack_frame]
         else:
             self.image = self.images_idle[0]
-        surface.blit(self.image, self.rect)
+
+        image_to_draw = self.image
+        if not self.facing_right:
+            image_to_draw = pygame.transform.flip(self.image, True, False)
+
+        surface.blit(image_to_draw, self.rect)
